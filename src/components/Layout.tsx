@@ -62,8 +62,40 @@ export function Layout({ children }: LayoutProps) {
         </div>
       </header>
 
+      {/* Sidebar Navigation (Desktop) */}
+      <nav className={cn(
+        "fixed left-0 top-16 h-[calc(100vh-4rem)] w-64 border-r bg-card p-4 transition-transform duration-300 ease-in-out md:block hidden z-40",
+        sidebarOpen ? "translate-x-0" : "-translate-x-full"
+      )}>
+        <div className="space-y-2">
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = location.pathname === item.path;
+            return (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={cn(
+                  'flex items-center gap-3 rounded-lg px-4 py-3 text-lg transition-colors',
+                  isActive
+                    ? 'bg-primary text-primary-foreground'
+                    : 'text-foreground hover:bg-accent hover:text-accent-foreground'
+                )}
+              >
+                <Icon className="h-6 w-6" />
+                <span className="font-medium">{item.label}</span>
+              </Link>
+            );
+          })}
+        </div>
+      </nav>
+
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-6">
+      <main className={cn(
+        "container mx-auto px-4 py-6 transition-all duration-300",
+        sidebarOpen ? "md:ml-64" : "md:ml-0",
+        "pb-20 md:pb-6"
+      )}>
         {children}
       </main>
 
@@ -91,39 +123,6 @@ export function Layout({ children }: LayoutProps) {
           })}
         </div>
       </nav>
-
-      {/* Sidebar Navigation (Desktop) */}
-      <nav className={cn(
-        "fixed left-0 top-16 h-[calc(100vh-4rem)] w-64 border-r bg-card p-4 transition-transform duration-300 ease-in-out md:block hidden",
-        sidebarOpen ? "translate-x-0" : "-translate-x-full"
-      )}>
-        <div className="space-y-2">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = location.pathname === item.path;
-            return (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={cn(
-                  'flex items-center gap-3 rounded-lg px-4 py-3 text-lg transition-colors',
-                  isActive
-                    ? 'bg-primary text-primary-foreground'
-                    : 'text-foreground hover:bg-accent hover:text-accent-foreground'
-                )}
-              >
-                <Icon className="h-6 w-6" />
-                <span className="font-medium">{item.label}</span>
-              </Link>
-            );
-          })}
-        </div>
-      </nav>
-
-      <div className={cn(
-        "pb-20 md:pb-0 transition-all duration-300",
-        sidebarOpen ? "md:ml-64" : "md:ml-0"
-      )} />
     </div>
   );
 }
